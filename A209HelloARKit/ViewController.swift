@@ -70,17 +70,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
 
     @objc func taped(sender:UIGestureRecognizer){
-         let view = sender.view as! SCNView //由傳送者取得 ARView 的實體
-         let location = sender.location(in: view) //取得點選的畫面座標
-         let hitResult = view.hitTest(location, options: nil) //試試看能不能點到東西
-         if hitResult.isEmpty != true{
-             let randomColor = UIColor(
-                     red: CGFloat(arc4random()) / CGFloat(UInt32.max),
-                     green: CGFloat(arc4random()) / CGFloat(UInt32.max),
-                     blue:  CGFloat(arc4random()) / CGFloat(UInt32.max),
-                     alpha: 1.0)
-                 hitResult[0].node.geometry?.materials[0].diffuse.contents = randomColor
-         }
+        let view = sender.view as! ARSCNView
+         //由傳送者取得 ARView 的實體, 必需為 ARSCNView 才能偵測 plane
+        let location = sender.location(in: view)
+        let hitResult = view.hitTest(location, types: .existingPlaneUsingExtent) //試試是否是點到 plane
+        if let firstHitResults = hitResult.first{
+            self.addSphere(hitResult: firstHitResults)
+        }
+
      }
 
     
@@ -100,6 +97,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
 
+    @objc func addSphere(hitResult:ARHitTestResult){
+        let sphere = SCNSphere(radius: 0.075)
+        let material = SCNMaterial()
+        material.diffuse.contents = UIImage(named: "worldmap")
+        sphere.materials = [material]
+        let sphereNode = SCNNode(geometry: sphere)
+        sphereNode.position = SCNVector3(hitResult.worldTransform.columns.3.x, hitResult.worldTransform.columns.3.y+0.5, hitResult.worldTransform.columns.3.z)
+        sphereNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)//加上物理特性並啟動
+        self.sceneView.scene.rootNode.addChildNode(sphereNode)
+    }
 
 
 }
