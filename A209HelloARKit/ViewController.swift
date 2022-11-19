@@ -86,7 +86,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
          let location = sender.location(in: view) //取得點選的畫面座標
          let hitResult = view.hitTest(location, options: nil) //試試看能不能點到東西
          if hitResult.isEmpty != true{
-             print("some thing!")
+             let randomColor = UIColor(
+                     red: CGFloat(arc4random()) / CGFloat(UInt32.max),
+                     green: CGFloat(arc4random()) / CGFloat(UInt32.max),
+                     blue:  CGFloat(arc4random()) / CGFloat(UInt32.max),
+                     alpha: 1.0)
+                 hitResult[0].node.geometry?.materials[0].diffuse.contents = randomColor
          }else{
              print("nothing!")
          }
