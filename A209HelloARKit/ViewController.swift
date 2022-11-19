@@ -37,13 +37,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         material.diffuse.contents = UIColor.red  //材質內容為紅色
         box.materials = [material] //把 box 的貼圖材質加進去
         let node = SCNNode(geometry: box) //新增一個 Box
-        node.position = SCNVector3(0, 0, -1.5) //設定 node 在空間的位置
+        node.position = SCNVector3(0, 0, -0.5) //設定 node 在空間的位置
         
         
         sceneView.scene.rootNode.addChildNode(node) //把 node 加入到目前的 scene 上
-        
-        
-        
         
     }
     
@@ -59,11 +56,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Pause the view's session
         sceneView.session.pause()
     }
 
+    
+    
+    
+    
     // MARK: - ARSCNViewDelegate
     
 /*
