@@ -30,7 +30,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene = scene
         sceneView.debugOptions = [.showWorldOrigin,.showFeaturePoints]
         
-        
+
 //
 //        let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.01) //新增一個 BOX
 //        let material = SCNMaterial() //新增材質
@@ -64,16 +64,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(taped(sender:)))
         sceneView.addGestureRecognizer(gesture)
         
+        // Create a session configuration
+        let configuration = ARWorldTrackingConfiguration()
+        
+        configuration.planeDetection = [.horizontal]
+        
+        // Run the view's session
+        sceneView.session.run(configuration)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
-
-        // Run the view's session
-        sceneView.session.run(configuration)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -101,6 +104,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     // MARK: - ARSCNViewDelegate
+    
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        print("find Plane")
+    }
     
 /*
     // Override to create and configure nodes for anchors added to the view's session.
